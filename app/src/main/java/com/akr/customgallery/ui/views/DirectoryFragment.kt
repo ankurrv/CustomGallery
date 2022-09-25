@@ -42,10 +42,10 @@ class DirectoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setUpUI();
+        setUpUI()
     }
 
-    private fun setUpUI(){
+    private fun setUpUI() {
         binding.buttonOpenGallery.setOnClickListener {
 
             if (activity?.let { it1 ->

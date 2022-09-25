@@ -13,16 +13,36 @@
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            app:destination="@id/GalleryFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
+        android:id="@+id/GalleryFragment"
         android:name="com.akr.customgallery.ui.views.GalleryFragment"
         android:label="@string/gallery_fragment_label"
         tools:layout="@layout/fragment_gallery">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            android:id="@+id/action_GalleryFragment_to_GalleryDetailsFragment"
+            app:destination="@id/GalleryDetailsFragment" />
+
+        <action
+            android:id="@+id/action_GalleryFragment_to_DirectoryFragment"
             app:destination="@id/DirectoryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/GalleryDetailsFragment"
+        android:name="com.akr.customgallery.ui.views.GalleryDetailsFragment"
+        android:label="@string/gallery_fragment_label"
+        tools:layout="@layout/fragment_gallery_details">
+
+        <argument
+            android:name="directoryName"
+            android:defaultValue=""
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_GalleryDetailsFragment_to_GalleryFragment"
+            app:destination="@id/GalleryFragment" />
     </fragment>
 </navigation>

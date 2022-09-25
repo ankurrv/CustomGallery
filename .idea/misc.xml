@@ -4,12 +4,18 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/ic_baseline_camera_alt_24.xml" value="0.119" />
+        <entry key="app/src/main/res/drawable/ic_baseline_grid_view_24.xml" value="0.119" />
+        <entry key="app/src/main/res/drawable/ic_baseline_list_24.xml" value="0.119" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.13269927536231885" />
+        <entry key="app/src/main/res/layout/bottom_sheet_dialog.xml" value="0.13269927536231885" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/directory_view_layout.xml" value="0.13269927536231885" />
         <entry key="app/src/main/res/layout/fragment_directory.xml" value="0.13269927536231885" />
         <entry key="app/src/main/res/layout/fragment_gallery.xml" value="0.13269927536231885" />
+        <entry key="app/src/main/res/layout/fragment_gallery_details.xml" value="0.13269927536231885" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.13269927536231885" />
+        <entry key="app/src/main/res/layout/media_view.xml" value="0.13269927536231885" />
+        <entry key="app/src/main/res/menu/menu_main.xml" value="0.24114583333333334" />
       </map>
     </option>
   </component>

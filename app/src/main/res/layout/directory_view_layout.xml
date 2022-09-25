@@ -4,6 +4,10 @@
     android:id="@+id/directoryCardView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    app:cardCornerRadius="0dp"
+    android:elevation="8dp"
+    app:cardElevation="8dp"
+    app:contentPadding="0dp"
     android:layout_margin="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout

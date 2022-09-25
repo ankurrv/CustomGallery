@@ -12,7 +12,7 @@ import com.assessment.comera.ui.viewholders.DirectoryViewHolder
 class DirectoryAdapter(
 
     val context: Activity,
-    private val directoryList: List<DirectoryModel>,
+    private val directoryHashMap: HashMap<String, MutableList<DirectoryModel>>,
     val listener: OnItemClickListener
 ) :
     RecyclerView.Adapter<DirectoryViewHolder>() {
@@ -23,15 +23,23 @@ class DirectoryAdapter(
     }
 
     override fun onBindViewHolder(holder: DirectoryViewHolder, position: Int) {
-        holder.bind(context, directoryList[position])
-        holder.itemView.setOnClickListener{
-            if(listener!=null){
-                listener.onItemClick(directoryList[position])
+
+        val key = directoryHashMap.keys.sorted().elementAt(position)
+        val list = directoryHashMap.get(key)
+        if (list != null) {
+            // Collections.sort(list)
+            val model = list.get(0)
+            holder.bind(context, model, list.size)
+            holder.itemView.setOnClickListener {
+                if (listener != null) {
+                    listener.onItemClick(model)
+                }
             }
         }
+
     }
 
     override fun getItemCount(): Int {
-        return directoryList.size
+        return directoryHashMap.size
     }
 }

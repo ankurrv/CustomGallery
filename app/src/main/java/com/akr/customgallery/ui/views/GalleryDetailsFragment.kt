@@ -5,7 +5,6 @@ import android.content.DialogInterface.OnShowListener
 import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,12 +14,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.akr.customgallery.R
+import com.akr.customgallery.adapters.GalleryAdapter
 import com.akr.customgallery.callbacks.OnItemClickListener
 import com.akr.customgallery.data.model.MediaModel
 import com.akr.customgallery.databinding.BottomSheetDialogBinding
 import com.akr.customgallery.databinding.FragmentGalleryDetailsBinding
 import com.akr.customgallery.ui.viewmodels.GalleryDetailsViewModel
-import com.assessment.comera.adapters.GalleryAdapter
+import com.akr.customgallery.utilities.Constants
 import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -71,10 +71,9 @@ class GalleryDetailsFragment : Fragment(), OnItemClickListener {
 
     private fun setUpUI() {
         val directoryName = arguments?.getString("directoryName").toString()
-        Log.e("directoryName", "directoryName $directoryName")
-
         (activity as AppCompatActivity).supportActionBar?.title = directoryName
 
+        // get media as per selected dirctory
         lifecycleScope.launchWhenCreated {
             mediaList = viewModel.getMediaFromDirectory(directoryName)
         }
@@ -92,7 +91,8 @@ class GalleryDetailsFragment : Fragment(), OnItemClickListener {
                 mediaListModel.size
                 binding.galleryRecyclerView.layoutManager = GridLayoutManager(activity, 4)
 
-                var reversedList = mediaListModel.reversed()
+                var reversedList = mediaListModel.reversed() // reverse list to show latest at top
+                // load media in adapter and show
                 galleryAdapter =
                     activity?.let { it1 ->
                         GalleryAdapter(
@@ -107,6 +107,7 @@ class GalleryDetailsFragment : Fragment(), OnItemClickListener {
         }
     }
 
+    // BottomSheetDialog to show selected images and to play selected video
     private fun showBottomSheetDialog(model: MediaModel) {
         val bottomSheetBinding = BottomSheetDialogBinding.inflate(layoutInflater)
         val dialog = activity?.let { BottomSheetDialog(it) }
@@ -121,10 +122,11 @@ class GalleryDetailsFragment : Fragment(), OnItemClickListener {
             }
         }
         bottomSheetBinding.fullImageView.minimumHeight = getWindowHeight() - 210
+        // load full image using with glide library
         activity?.let {
             Glide.with(it).load(photoUri).into(bottomSheetBinding.fullImageView)
         }
-        if (model.thumbUri.toString().endsWith("mp4")) {
+        if (model.thumbUri.toString().endsWith(Constants.VIDEO_TYPE)) {
             preparePlayer(bottomSheetBinding, photoUri)
             bottomSheetBinding.fullImageView.visibility = View.INVISIBLE
             bottomSheetBinding.playerView.visibility = View.VISIBLE
@@ -133,7 +135,8 @@ class GalleryDetailsFragment : Fragment(), OnItemClickListener {
             bottomSheetBinding.playerView.visibility = View.INVISIBLE
         }
         dialog?.setOnDismissListener {
-            if (model.thumbUri.toString().endsWith("mp4")) {
+            if (model.thumbUri.toString().endsWith(Constants.VIDEO_TYPE)) {
+                // Release media player at dialog dismiss
                 releasePlayer()
             }
         }
@@ -141,6 +144,7 @@ class GalleryDetailsFragment : Fragment(), OnItemClickListener {
         dialog?.show()
     }
 
+    // open full screen dialog
     private fun setupFullHeight(bottomSheetDialog: BottomSheetDialog) {
         val bottomSheet =
             bottomSheetDialog.findViewById<View>(R.id.design_bottom_sheet) as View
@@ -165,14 +169,18 @@ class GalleryDetailsFragment : Fragment(), OnItemClickListener {
 
     override fun onItemClick(mediaModel: Any) {
         val model = mediaModel as MediaModel
+        // open selected media file in full screen in dialog format
+        // slide down to cancel or dismiss full screen mode of meida.
         showBottomSheetDialog(model)
     }
 
+    // Prepare exoplayer to load selected video files.
     private fun preparePlayer(binding: BottomSheetDialogBinding, uri: Uri) {
         exoPlayer = activity?.let { ExoPlayer.Builder(it).build() }
         exoPlayer?.playWhenReady = true
         binding.playerView.player = exoPlayer
 
+        // open video file from uri to play in exoplayer
         val mediaSources = arrayOfNulls<MediaSource>(1)
         mediaSources[0] = ProgressiveMediaSource.Factory(FileDataSource.Factory())
             .createMediaSource(MediaItem.fromUri(uri))
@@ -183,6 +191,7 @@ class GalleryDetailsFragment : Fragment(), OnItemClickListener {
         exoPlayer?.prepare()
     }
 
+    // Release exoplayer after used.
     private fun releasePlayer() {
         exoPlayer?.let { player ->
             playbackPosition = player.currentPosition

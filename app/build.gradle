@@ -49,8 +49,13 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
+    // Glide library used to load images and videos thumb and full images.
     implementation 'com.github.bumptech.glide:glide:4.13.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
+
+    // zoom library used to zoom selected image.
     implementation 'com.jsibbold:zoomage:1.3.1'
+
+    // Exoplayer to play video files.
     implementation 'com.google.android.exoplayer:exoplayer:2.18.1'
 }

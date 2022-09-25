@@ -6,6 +6,7 @@ import android.database.MergeCursor
 import android.provider.MediaStore
 import androidx.lifecycle.AndroidViewModel
 import com.akr.customgallery.data.model.DirectoryModel
+import com.akr.customgallery.utilities.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.File
@@ -27,6 +28,7 @@ class DirectoryViewModel(context: Application) : AndroidViewModel(context) {
         return latestNews
     }
 
+    // fetch all the directory which having media files like images and videos
     private fun getAllMediaFilesOnDevice(context: Context): HashMap<String, MutableList<DirectoryModel>> {
         val hashMap: HashMap<String, MutableList<DirectoryModel>> = HashMap()
         val strOrder = MediaStore.Images.Media.DATE_TAKEN + " DESC"
@@ -82,6 +84,7 @@ class DirectoryViewModel(context: Application) : AndroidViewModel(context) {
                 fileName = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length)
 
                 val directoryModel = DirectoryModel(fileName, photoUri)
+                // load media directory wise
                 if (hashMap.contains(fileName)) {
                     hashMap.get(fileName)?.add(directoryModel)
                 } else {
@@ -89,23 +92,24 @@ class DirectoryViewModel(context: Application) : AndroidViewModel(context) {
                     list.add(directoryModel)
                     hashMap.put(fileName, list)
                 }
-                if (photoUri.endsWith("mp4")) {
-                    val directoryModel = DirectoryModel("All Videos", photoUri)
-                    if (hashMap.contains("All Videos")) {
-                        hashMap.get("All Videos")?.add(directoryModel)
+                if (photoUri.endsWith(Constants.VIDEO_TYPE)) { // load all videos from any directory
+                    val directoryModel = DirectoryModel(Constants.VIDEOS, photoUri)
+                    if (hashMap.contains(Constants.VIDEOS)) {
+                        hashMap[Constants.VIDEOS]?.add(directoryModel)
                     } else {
                         val list: MutableList<DirectoryModel> = ArrayList()
                         list.add(directoryModel)
-                        hashMap.put("All Videos", list)
+                        hashMap[Constants.VIDEOS] = list
                     }
                 } else {
-                    val directoryModel = DirectoryModel("All Images", photoUri)
-                    if (hashMap.contains("All Images")) {
-                        hashMap.get("All Images")?.add(directoryModel)
+                    // load all images from any directory
+                    val directoryModel = DirectoryModel(Constants.IMAGES, photoUri)
+                    if (hashMap.contains(Constants.IMAGES)) {
+                        hashMap[Constants.IMAGES]?.add(directoryModel)
                     } else {
                         val list: MutableList<DirectoryModel> = ArrayList()
                         list.add(directoryModel)
-                        hashMap.put("All Images", list)
+                        hashMap[Constants.IMAGES] = list
                     }
                 }
 

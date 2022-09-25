@@ -8,11 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.akr.customgallery.R
 import com.akr.customgallery.databinding.FragmentDirectoryBinding
-import com.akr.customgallery.ui.viewmodels.DirectoryViewModel
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -26,7 +24,6 @@ class DirectoryFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private lateinit var directoryViewModel: DirectoryViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +31,6 @@ class DirectoryFragment : Fragment() {
     ): View? {
 
         _binding = FragmentDirectoryBinding.inflate(inflater, container, false)
-        directoryViewModel = ViewModelProvider(this)[DirectoryViewModel::class.java]
         return binding.root
 
     }
@@ -47,7 +43,7 @@ class DirectoryFragment : Fragment() {
 
     private fun setUpUI() {
         binding.buttonOpenGallery.setOnClickListener {
-
+            // Permission check Read external storage
             if (activity?.let { it1 ->
                     ActivityCompat.checkSelfPermission(
                         it1,
@@ -65,8 +61,8 @@ class DirectoryFragment : Fragment() {
                     )
                 }
             } else {
-
-                findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+                // navigate to Gallery Fragment at button click
+                findNavController().navigate(R.id.action_DirectoryFragment_to_GalleryFragment)
             }
 
         }

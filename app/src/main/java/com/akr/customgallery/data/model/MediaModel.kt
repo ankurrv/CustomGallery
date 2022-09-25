@@ -1,3 +1,4 @@
 package com.akr.customgallery.data.model
 
-data class MediaModel(val thumbUri: String, val time: Long)
+// media details
+data class MediaModel(val thumbUri: String, val createdDate: Long)

@@ -6,6 +6,7 @@ import android.database.MergeCursor
 import android.provider.MediaStore
 import androidx.lifecycle.AndroidViewModel
 import com.akr.customgallery.data.model.MediaModel
+import com.akr.customgallery.utilities.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.File
@@ -24,6 +25,7 @@ class GalleryDetailsViewModel(context: Application) : AndroidViewModel(context) 
         return latestNews
     }
 
+    // load media as per selected directory
     private fun getAllMediaFilesOnDevice(
         context: Context,
         directoryName: String
@@ -83,19 +85,19 @@ class GalleryDetailsViewModel(context: Application) : AndroidViewModel(context) 
                 var fileName = File(photoUri).parent
                 fileName = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length)
 
-                if (directoryName != "All Images" && directoryName != "All Videos") {
+                if (directoryName != Constants.IMAGES && directoryName != Constants.VIDEOS) {
                     if (fileName.equals(directoryName)) {
                         val mediaModel = MediaModel(photoUri, time)
                         files.add(mediaModel)
                     }
                 } else {
                     val mediaModel = MediaModel(photoUri, time)
-                    if (directoryName == "All Images") {
-                        if (!photoUri.endsWith(".mp4"))
+                    if (directoryName == Constants.IMAGES) {
+                        if (!photoUri.endsWith(Constants.VIDEO_TYPE))
                             files.add(mediaModel)
                     }
-                    if (directoryName == "All Videos") {
-                        if (photoUri.endsWith(".mp4"))
+                    if (directoryName == Constants.VIDEOS) {
+                        if (photoUri.endsWith(Constants.VIDEO_TYPE))
                             files.add(mediaModel)
                     }
                 }
@@ -104,6 +106,6 @@ class GalleryDetailsViewModel(context: Application) : AndroidViewModel(context) 
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return files.sortedWith(compareBy { it.time })
+        return files.sortedWith(compareBy { it.createdDate })
     }
 }

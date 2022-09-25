@@ -18,7 +18,7 @@ import com.akr.customgallery.callbacks.OnItemClickListener
 import com.akr.customgallery.data.model.DirectoryModel
 import com.akr.customgallery.databinding.FragmentGalleryBinding
 import com.akr.customgallery.ui.viewmodels.DirectoryViewModel
-import com.assessment.comera.adapters.DirectoryAdapter
+import com.akr.customgallery.adapters.DirectoryAdapter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 
@@ -48,6 +48,7 @@ class GalleryFragment : Fragment(), OnItemClickListener, MenuProvider {
         _binding = FragmentGalleryBinding.inflate(inflater, container, false)
         directoryViewModel = ViewModelProvider(this)[DirectoryViewModel::class.java]
 
+        // Add menu option in gallery fragment to switch list and grid view.
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
@@ -73,7 +74,7 @@ class GalleryFragment : Fragment(), OnItemClickListener, MenuProvider {
     }
 
     private fun initData() {
-
+        // load local storage media and show in recyclerview
         lifecycleScope.launchWhenCreated {
             directoryList.collectLatest { it ->
                 directoryListModel = it
@@ -101,11 +102,14 @@ class GalleryFragment : Fragment(), OnItemClickListener, MenuProvider {
     override fun onItemClick(mediaModel: Any) {
         val model = mediaModel as DirectoryModel
         val bundle = bundleOf("directoryName" to model.name)
+        // navigate to show all media from selected directory.
         findNavController().navigate(R.id.action_GalleryFragment_to_GalleryDetailsFragment, bundle)
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.menu_main, menu)
+
+        // change menu icon color as per day and night mode
         for (i in 0 until menu.size()) {
             val drawable = menu.getItem(i).icon
             if (drawable != null) {
@@ -120,6 +124,8 @@ class GalleryFragment : Fragment(), OnItemClickListener, MenuProvider {
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         if (menuItem.itemId == R.id.action_settings) {
+
+            // change menu icon in list and grid view
             if (!isGrid) {
                 isGrid = true
                 menuItem.setIcon(R.drawable.ic_baseline_grid_view_24)
@@ -127,6 +133,7 @@ class GalleryFragment : Fragment(), OnItemClickListener, MenuProvider {
                 isGrid = false
                 menuItem.setIcon(R.drawable.ic_baseline_list_24)
             }
+            // change selected menu icon color as per selected day night mode
             val drawable = menuItem.icon
             if (drawable != null) {
                 drawable.mutate()
@@ -136,6 +143,7 @@ class GalleryFragment : Fragment(), OnItemClickListener, MenuProvider {
                 )
             }
 
+            // switch recyclerview in list and grid view
             binding.directoryRecyclerView.layoutManager = if (isGrid) LinearLayoutManager(activity) else GridLayoutManager(
                 activity,
                 2

@@ -14,11 +14,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.akr.customgallery.R
+import com.akr.customgallery.adapters.DirectoryAdapter
 import com.akr.customgallery.callbacks.OnItemClickListener
 import com.akr.customgallery.data.model.DirectoryModel
 import com.akr.customgallery.databinding.FragmentGalleryBinding
 import com.akr.customgallery.ui.viewmodels.DirectoryViewModel
-import com.akr.customgallery.adapters.DirectoryAdapter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 
@@ -144,16 +144,15 @@ class GalleryFragment : Fragment(), OnItemClickListener, MenuProvider {
             }
 
             // switch recyclerview in list and grid view
-            binding.directoryRecyclerView.layoutManager = if (isGrid) LinearLayoutManager(activity) else GridLayoutManager(
-                activity,
-                2
-            )
+            binding.directoryRecyclerView.layoutManager =
+                if (isGrid) LinearLayoutManager(activity) else GridLayoutManager(
+                    activity,
+                    2
+                )
             directoryAdapter.notifyDataSetChanged()
 
         }
-        if (menuItem.itemId == androidx.appcompat.R.id.home) {
-            findNavController().navigate(R.id.action_GalleryFragment_to_DirectoryFragment)
-        }
-        return true
+
+        return false
     }
 }
